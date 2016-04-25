@@ -43,15 +43,14 @@ namespace BizManWeb.Data
                 var jsonArray = JArray.Load(textReader);
                 foreach(var item in jsonArray)
                 {
-                    var one = item["one"].Value<int>();
-                    var two = item["two"].Value<int>();
+                    var players = item["players"].Values<int>().ToList();
                     var id = item["id"].Value<int>();
                     data.Add(
                         new Team
                         {
                             ID = id,
-                            GolferOne = golfers.Data.First(g => g.ID == one),
-                            GolferTwo = golfers.Data.First(g => g.ID == two)
+                            GolferOne = golfers.Data.First(g => g.ID == players[0]),
+                            GolferTwo = golfers.Data.First(g => g.ID == players[1])
                         });
                 }
             }
