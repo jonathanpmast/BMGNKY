@@ -1,0 +1,48 @@
+@using BizManWeb.ViewModels.Schedule
+@model ScheduleIndexViewModel
+
+<h1>
+    2016 League Schedule
+</h1>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-condensed schedule-table">
+            @foreach (var round in Model.Rounds)
+            {
+                <tr class="@(round.IsCurrentRound ? "info" : "default")">
+                    <th>
+                        RD@(round.ID)&nbsp;
+                        @if (round.HasBeenPlayed)
+                        {
+                            <span class="label label-default">
+                            @round.Date.ToShortDateString()
+                            </span>
+                        }
+
+
+                    </th>
+                    @foreach (var match in round.Matches)
+                {
+                        <td>@match.Teams[0].ID - @match.Teams[1].ID</td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h4>
+            Teams
+        </h4>
+        <ol>
+            @foreach (var team in Model.Teams)
+            {
+
+                <li><b>@team.GolferOne.Name</b> and <b>@team.GolferTwo.Name</b></li>
+
+
+            }
+        </ol>
+    </div>
+</div>

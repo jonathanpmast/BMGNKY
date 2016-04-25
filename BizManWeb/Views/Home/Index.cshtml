@@ -1,0 +1,42 @@
+﻿@using BizManWeb.ViewModels.Home
+@model HomeIndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row">
+    <div class="col-md-6">
+        <h2>Upcoming <small><strong>Rd @Model.CurrentRound.ID</strong> @Model.CurrentRoundDate.ToShortDateString()<br class="hidden-sm" />&nbsp;</small></h2>
+        @foreach (var matchup in Model.CurrentRound.Matches)
+        {
+            <div class="row well well-sm">
+                <div class="col-md-6">
+                    <span class="label label-info">@matchup.Teams[0].ID</span>&nbsp;<span><strong>@matchup.Teams[0].GolferOne.FirstInitialPlusLastName <small>&amp;</small> @matchup.Teams[0].GolferTwo.FirstInitialPlusLastName</strong></span>
+                </div>
+                <div class="col-md-6">
+                    <span class="label label-info">@matchup.Teams[1].ID</span>&nbsp;<span><strong>@matchup.Teams[1].GolferOne.FirstInitialPlusLastName <small>&amp;</small> @matchup.Teams[1].GolferTwo.FirstInitialPlusLastName</strong></span>
+
+                </div>
+            </div>
+
+        }
+
+    </div>
+    <div class="col-md-6">
+        <h2>
+            Recent <small><strong>Rd @Model.LastRound.ID</strong> @Model.LastRound.Date.ToShortDateString() <br />(Still waiting on the results.)</small>
+        </h2>
+        @foreach (var matchup in Model.LastRound.Matches)
+        {
+            <div class="row well well-sm">
+                <div class="col-md-6">
+                    <span class="label label-info">@matchup.Teams[0].ID</span>&nbsp;<span><strong>@matchup.Teams[0].GolferOne.FirstInitialPlusLastName <small>&amp;</small> @matchup.Teams[0].GolferTwo.FirstInitialPlusLastName</strong></span>
+                </div>
+                <div class="col-md-6">
+                    <span class="label label-info">@matchup.Teams[1].ID</span>&nbsp;<span><strong>@matchup.Teams[1].GolferOne.FirstInitialPlusLastName <small>&amp;</small> @matchup.Teams[1].GolferTwo.FirstInitialPlusLastName</strong></span>
+
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

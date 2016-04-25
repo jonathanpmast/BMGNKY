@@ -1,0 +1,23 @@
+@using BizManWeb.ViewModels.Teams
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model IndexViewModel
+<div class="row">
+    <div class="col-md-12">
+        <h2>Teams</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <ol>
+            @foreach (var team in Model.Teams)
+            {
+
+                <li>@team.GolferOne.Name and @team.GolferTwo.Name</li>
+
+
+            }
+        </ol>
+    </div>
+</div>
