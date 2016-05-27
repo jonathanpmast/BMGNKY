@@ -1,0 +1,59 @@
+@model BizManWeb.ViewModels.Account.ExternalLoginConfirmationViewModel
+@{
+    ViewData["Title"] = "First Time Sign In";
+}
+
+<div class="page-header">
+    <h1>
+        @ViewData["Title"]
+        <br />
+        <small>Let us know who you are:</small>
+    </h1>
+</div>
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+
+    <div class="panel panel-success">
+        <div class="panel-heading">You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong> and we received this information about you:</div>
+        <div class="panel-body form-group">
+            <label class="col-md-2 control-label">Email</label>
+            <div class="col-md-10">
+                <p class="form-control-static">@Model.Email</p>
+                @Html.HiddenFor(x => x.Email)
+            </div>
+            <label class="col-md-2 control-label">Name</label>
+            <div class="col-md-10">
+                <p class="form-control-static">@Model.Name</p>
+                @Html.HiddenFor(x => x.Name)
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel panel-warning">
+        <div class="panel-heading"><strong>Is this you?</strong>   We have a golfer in the database with a similar name to you.</div>
+        <div class="panel-body form-group">
+            <label class="col-md-2 control-label">Name</label>
+            <div class="col-md-10">
+                <p class="form-control-static">@Model.SuspectedGolfer.Name</p>
+                @Html.HiddenFor(x => x.SuspectedGolfer)
+            </div>
+            <label class="col-md-2 control-label">Handicap</label>
+            <div class="col-md-10">
+                <p class="form-control-static">@Model.SuspectedGolfer.Handicap</p>
+                 
+            </div>
+            <hr />
+            <div class="col-md-offset-1 col-md-11">
+                <button type="submit" style="min-width:175px; margin-top:5px;" class="btn btn-success" name="ConfirmGolfer" value="Yes"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i>&nbsp;Yes!</button>
+                <button type="submit" style="min-width:175px; margin-top:5px;" class="btn btn-danger" name="ConfirmGolfer" value="No"><i class="glyphicon glyphicon-remove"></i>&nbsp; No, I just have a really common name.</button>
+            </div>
+        </div>
+    </div>
+    
+    
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

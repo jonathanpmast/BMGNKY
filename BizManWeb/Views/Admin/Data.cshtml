@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Admin | Data Management";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Data Management</h2>
+        <p>
+            This page is here to initialize the database.  It will load golfer, schedule, and match data from text files in the git repository.
+        </p>
+        <p class="bg-warning">
+            <strong>Don't click this button unless you know what you're doing.</strong>
+        </p>
+
+        <form asp-controller="Admin" asp-action="LoadData" method="post" class="form-horizontal" role="form">
+            <button class="btn btn-default">Load Data</button>
+        </form>
+    </div>
+</div>

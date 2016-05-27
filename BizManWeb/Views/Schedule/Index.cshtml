@@ -11,11 +11,11 @@
             {
                 <tr class="@(round.IsCurrentRound ? "info" : "default")">
                     <th>
-                        RD@(round.ID)&nbsp;
+                        RD@(round.Order)&nbsp;
                         @if (round.HasBeenPlayed)
                         {
                             <span class="label label-default">
-                            @round.Date.ToShortDateString()
+                            @round.Date.ToString("d")
                             </span>
                         }
 
@@ -23,7 +23,7 @@
                     </th>
                     @foreach (var match in round.Matches)
                 {
-                        <td>@match.Teams[0].ID - @match.Teams[1].ID</td>
+                        <td>@match.Teams.ToList()[0].Team.TeamNumber - @match.Teams.ToList()[1].Team.TeamNumber</td>
                     }
                 </tr>
             }
@@ -39,7 +39,7 @@
             @foreach (var team in Model.Teams)
             {
 
-                <li><b>@team.GolferOne.Name</b> and <b>@team.GolferTwo.Name</b></li>
+                <li><b>@team.Golfers.ToList()[0].Name</b> and <b>@team.Golfers.ToList()[1].Name</b></li>
 
 
             }

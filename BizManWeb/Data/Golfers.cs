@@ -1,6 +1,7 @@
 using BizManWeb.Models;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
+using BizManWebRC2.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace BizManWeb.Data
         {
             get
             {
-                if(Golfers._data == null)
+                if (Golfers._data == null)
                 {
                     Golfers._data = ParseGolfers();
                 }
@@ -34,7 +35,10 @@ namespace BizManWeb.Data
 
         private List<Golfer> ParseGolfers()
         {
-            return JsonConvert.DeserializeObject<List<Golfer>>(File.ReadAllText(_hostingEnvironment.MapPath("data/golfers.json")));
+            var fileInfo = _hostingEnvironment.WebRootFileProvider.GetFileInfo("data/golfers.json");
+            return JsonConvert.DeserializeObject<List<Golfer>>(fileInfo.ReadToEnd());
         }
+
+        
     }
 }

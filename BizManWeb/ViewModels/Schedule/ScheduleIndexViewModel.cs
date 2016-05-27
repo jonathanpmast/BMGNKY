@@ -9,7 +9,7 @@ namespace BizManWeb.ViewModels.Schedule
 {
     public class ScheduleIndexViewModel
     {
-        public List<Round> Rounds { get; set; }
-        public List<Team> Teams { get; set; }
+        public ICollection<Round> Rounds { get; set; }
+        public ICollection<Team> Teams { get; set; }
     }
 }

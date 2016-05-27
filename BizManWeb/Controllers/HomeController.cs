@@ -2,29 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using BizManWeb.Data;
-using Microsoft.AspNet.Hosting;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 namespace BizManWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
-
-        public HomeController(IHostingEnvironment hostingEnvironment)
+        BMGContext _context;
+        public HomeController(BMGContext context)
         {
-            _hostingEnvironment = hostingEnvironment;
+            _context = context;
         }
         public IActionResult Index()
         {
-            var Schedule = new Schedule(_hostingEnvironment);
             var vm = new ViewModels.Home.HomeIndexViewModel();
-            vm.CurrentRound = Schedule.Data.First(r => r.Date == DateTime.MinValue);
-            vm.LastRound = Schedule.Data.Last(r => r.Date != DateTime.MinValue);
+            vm.CurrentRound = _context.Rounds
+                                .OrderBy(r => r.Order)
+                                .Include(r => r.Matches)
+                                .ThenInclude(m => m.Teams)
+                                .ThenInclude(t => t.Team)
+                                .ThenInclude(t => t.Golfers)
+                                .FirstOrDefault(r => r.Date == DateTime.MinValue);
+            vm.LastRound = _context.Rounds
+                                .OrderBy(r => r.Order)
+                                .Include(r => r.Matches)
+                                .ThenInclude(m => m.Teams)
+                                .ThenInclude(t => t.Team)
+                                .ThenInclude(t => t.Golfers)
+                                .LastOrDefault(r => r.Date != DateTime.MinValue);
             return View(vm);
+
         }
-        
+
+        public IActionResult Claims() => View();
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

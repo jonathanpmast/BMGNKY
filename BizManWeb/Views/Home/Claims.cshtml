@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Claims: </h2>
+        <ul>
+            @foreach (var claim in User.Claims)
+            {
+                <li>@claim.Type - @claim.Value</li>
+            }
+
+        </ul>
+    </div>
+</div>

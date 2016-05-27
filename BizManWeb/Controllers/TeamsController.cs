@@ -1,7 +1,7 @@
 using BizManWeb.Data;
 using BizManWeb.ViewModels.Teams;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +13,17 @@ namespace BizManWeb.Controllers
     public class TeamsController :Controller
     {
         private IHostingEnvironment _hostingEnvironment;
-
-        public TeamsController(IHostingEnvironment hostingEnvironment)
+        BMGContext _context;
+        public TeamsController(IHostingEnvironment hostingEnvironment, BMGContext context)
         {
             _hostingEnvironment = hostingEnvironment;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            Teams teams = new Teams(_hostingEnvironment);
             var viewModel = new IndexViewModel();
-            viewModel.Teams = teams.Data;            
+            viewModel.Teams = _context.Teams.ToList();            
             return View(viewModel);
         }
     }

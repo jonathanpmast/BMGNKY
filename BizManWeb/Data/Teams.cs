@@ -1,5 +1,5 @@
 using BizManWeb.Models;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -34,14 +34,15 @@ namespace BizManWeb.Data
             }
         }
 
-        private List<Team> PopulateData()
+        private List<Team> PopulateData() 
         {
             Golfers golfers = new Golfers(_hostingEnvironment);
             var data = new List<Team>();
-            using (JsonTextReader textReader = new JsonTextReader(new StreamReader(_hostingEnvironment.MapPath("data/teams.json"))))
+            var fileInfo = _hostingEnvironment.WebRootFileProvider.GetFileInfo("data/teams.json");
+            using (JsonTextReader textReader = new JsonTextReader(new StreamReader(fileInfo.CreateReadStream())))
             {
                 var jsonArray = JArray.Load(textReader);
-                foreach(var item in jsonArray)
+                foreach (var item in jsonArray)
                 {
                     var players = item["players"].Values<int>().ToList();
                     var id = item["id"].Value<int>();
@@ -49,8 +50,11 @@ namespace BizManWeb.Data
                         new Team
                         {
                             ID = id,
-                            GolferOne = golfers.Data.First(g => g.ID == players[0]),
-                            GolferTwo = golfers.Data.First(g => g.ID == players[1])
+                            TeamNumber = id,
+                            Golfers = new List<Golfer>() {
+                                golfers.Data.First(g => g.ID == players[0]),
+                                golfers.Data.First(g => g.ID == players[1])
+                            }
                         });
                 }
             }

@@ -1,5 +1,6 @@
 using BizManWeb.Models;
-using Microsoft.AspNet.Hosting;
+using BizManWebRC2.Extensions;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -38,19 +39,21 @@ namespace BizManWeb.Data
         {
             Teams t = new Teams(_hostingEnvironment);
             List<Round> rounds = new List<Round>();
-            using (var reader = new JsonTextReader(new StreamReader(_hostingEnvironment.MapPath("data/schedule.json"))))
+            var fileInfo = _hostingEnvironment.WebRootFileProvider.GetFileInfo("data/schedule.json");
+            using (var reader = new JsonTextReader(new StreamReader(fileInfo.CreateReadStream())))
             {
                 var jsonArray = JArray.Load(reader);
                 foreach(var item in jsonArray)
                 {
                     var r = new Round();
+                    r.Matches = new List<Match>();
                     if(item["Date"] !=null)
                     {
                         r.Date = item["Date"].Value<DateTime>();                       
                     }
                     if (rounds.Count >= 1 && r.Date == DateTime.MinValue && rounds.Last().Date != DateTime.MinValue)
                         r.IsCurrentRound = true;
-                    r.ID = item["ID"].Value<int>();
+                    r.ID = r.Order = item["ID"].Value<int>();
                     var matches = item["Matches"].Values<int>().GetEnumerator();
                     var teeOrder = 1;
                     while(matches.MoveNext())
@@ -60,12 +63,17 @@ namespace BizManWeb.Data
                         var id2 = matches.Current;         
                         var m = new Match();
                         m.TeeOrder = teeOrder++;
-                        m.Teams.AddRange(t.Data.Where(team => team.ID == id1 || team.ID == id2));
-                        r.AddMatch(m);
+                        m.Teams = new List<MatchTeam>()
+                        {
+                            new MatchTeam() { Team = t.Data.First(team => team.ID == id1), Match = m },
+                            new MatchTeam() { Team = t.Data.First(team => team.ID == id2), Match = m }
+                        };
+                        r.Matches.Add(m);
                     }
-                    r.Matches.Sort((m1, m2) => m1.TeeOrder.CompareTo(m2.TeeOrder));
-                    rounds.Add(r);
+                    ((List<Match>)r.Matches).Sort((m1, m2) => m1.TeeOrder.CompareTo(m2.TeeOrder));
+                    rounds.Insert(0,r); 
                 }
+                rounds.Sort((r1, r2) => r1.ID.CompareTo(r2.ID));
             }
             return rounds;
         }

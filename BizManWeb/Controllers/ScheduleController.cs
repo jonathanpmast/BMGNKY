@@ -1,31 +1,35 @@
 using BizManWeb.Data;
 using BizManWeb.ViewModels.Schedule;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.EntityFrameworkCore;
 namespace BizManWeb.Controllers
 {
     public class ScheduleController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
-
-        public ScheduleController(IHostingEnvironment hostingEnvironment)
+        BMGContext _context;
+        public ScheduleController(BMGContext context)
         {
-            _hostingEnvironment = hostingEnvironment;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            Schedule s = new Schedule(_hostingEnvironment);
-            Teams t = new Teams(_hostingEnvironment);
             var vm = new ScheduleIndexViewModel();
-            vm.Rounds = s.Data;
-            vm.Teams = t.Data;
+            vm.Rounds = _context.Rounds
+                            .OrderBy(r => r.Order)
+                            .Include(r => r.Matches)
+                            .ThenInclude(m=>m.Teams)
+                            .ThenInclude(t=>t.Team)
+                            .ThenInclude(t=> t.Golfers)
+                            .ToList();
+            vm.Rounds.OrderBy(r=>r.Order).First(r => r.Date == DateTime.MinValue).IsCurrentRound = true;
+            vm.Teams = _context.Teams.OrderBy(t=> t.TeamNumber).Include(t=> t.Golfers).ToList(); 
             return View(vm);
         }
     }

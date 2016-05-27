@@ -7,12 +7,15 @@
 
     <environment names="Development">
         <link rel="stylesheet" href="~/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/font-awesome.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/font-awesome.min.css" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    @RenderSection("css", required: false)
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -31,6 +34,15 @@
                     <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-controller="Schedule" asp-action="Index">Schedule</a></li>
                     <li><a asp-controller="Home" asp-action="About">About</a></li>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li><a asp-controller="Admin" asp-action="Index">Admin</a></li>
+
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    @await Component.InvokeAsync(typeof(BizManWeb.ViewComponents.LoginViewComponent))
                 </ul>
             </div>
         </div>
