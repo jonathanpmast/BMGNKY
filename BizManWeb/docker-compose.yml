@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  bizmanweb:
+    image: user/bizmanweb${TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80"
