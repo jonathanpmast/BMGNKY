@@ -15,3 +15,14 @@ services:
       - ~/.nuget/packages:/root/.nuget/packages:ro
       - ~/clrdbg:/clrdbg:ro
     entrypoint: tail -f /dev/null
+    networks: 
+      - bizmanweb-net
+
+  mongodb:
+    image: mongo
+    networks:
+     - bizmanweb-net
+
+networks:
+  bizmanweb-net:
+    driver: bridge     
